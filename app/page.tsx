@@ -7,6 +7,7 @@ import { Github, Linkedin, Twitter, Globe } from 'lucide-react';
 import { Hexagon, Zap, Orbit, Users, ArrowUpRight, Shield, Sun, Moon, Ghost, Send, CheckCircle2 } from "lucide-react";
 import KalaSnake from "@/components/kalaSnake";
 import { team } from "@/components/team";
+import { Menu, X } from 'lucide-react';
 
 // --- REFINED COLOR PALETTE (BRIGHTER BUT RETRO) ---
 const PHILOSOPHY = {
@@ -17,6 +18,7 @@ const PHILOSOPHY = {
   paper: "#f5f5f5",  // Lighter, cleaner aged paper
 };
 
+
 const stepEase = (steps: number) => (v: number) => Math.floor(v * steps) / steps;
 
 const RETRO_TRANSITION = {
@@ -25,13 +27,17 @@ const RETRO_TRANSITION = {
   duration: 0.3
 } as const;
 
-const INSTANT_TRANSITION = {
-  type: "tween",
-  duration: 0 // For immediate "clicky" feedback
-};
-
 export default function BrumbunMancapat() {
   const [formStatus, setFormStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const navLinks = [
+    { label: 'Current_Project', id: 'game' },
+    { label: 'Philosophy', id: 'about' },
+    { label: 'Team', id: 'members' },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,22 +86,83 @@ export default function BrumbunMancapat() {
       <div className="fixed inset-0 pointer-events-none z-[100] opacity-20 crt-line" />
 
       {/* --- NAVIGATION --- */}
-      <nav className="fixed top-0 w-full z-50 border-b-2 border-[#1a1a1a] bg-[#f5f5f5]/90 backdrop-blur-sm">
+      <nav className="fixed top-0 w-full z-50 border-b-2 border-[#4a5d5e] bg-[#f0f4f4]/95 backdrop-blur-sm text-[#2d4a53]">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          
+          {/* LOGO */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollTo('hero')}>
-            <div className="w-6 h-6 bg-[#F8F9FA] border-2 border-[#1a1a1a] flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-sm animate-pulse" />
+            <div className="w-6 h-6 bg-[#d1dbdb] border-2 border-[#4a5d5e] flex items-center justify-center">
+              <div className="w-2 h-2 bg-[#78a1a0] rounded-sm animate-pulse" />
             </div>
             <span className="font-bold tracking-tighter text-lg uppercase">Brumbun_Studio</span>
           </div>
-          
-          <div className="hidden md:flex gap-8 text-xs font-bold uppercase">
-            <button onClick={() => scrollTo('game')} className="hover:text-[#e63946] transition-colors">Current_Project</button>
-            <button onClick={() => scrollTo('about')} className="hover:text-[#ffef00] transition-colors">Philosophy</button>
-            <button onClick={() => scrollTo('members')} className="hover:text-[#e63946] transition-colors">Team</button>
-            <button onClick={() => scrollTo('contact')} className="bg-[#1a1a1a] text-white px-3 py-1 hover:bg-[#ffef00] active:translate-y-1 active:translate-x-1 transition-none">Contact</button>
+
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex gap-8 text-xs font-bold uppercase items-center">
+            {navLinks.map((link, index) => (
+              <button 
+                key={link.id}
+                onClick={() => scrollTo(link.id)} 
+                className={`transition-colors ${
+                  index % 2 === 1 
+                    ? "hover:text-[#ffef00]" 
+                    : "hover:text-[#e63946]"
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+            <button 
+              onClick={() => scrollTo('contact')} 
+              className="bg-[#4a5d5e] text-[#f0f4f4] px-4 py-2 hover:bg-[#78a1a0] active:translate-y-1 transition-all"
+            >
+              Contact
+            </button>
+          </div>
+
+          {/* MOBILE HAMBURGER BUTTON */}
+          <div className="md:hidden flex items-center">
+            <button onClick={toggleMenu} className="p-2 text-[#4a5d5e]">
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+
+        {/* MOBILE MENU DROPDOWN */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-[#f0f4f4] border-b-2 border-[#4a5d5e] overflow-hidden"
+            >
+              <div className="flex flex-col gap-4 p-6 text-xs font-bold uppercase">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => {
+                      scrollTo(link.id);
+                      setIsOpen(false);
+                    }}
+                    className="text-left py-2 border-b border-[#d1dbdb] last:border-0"
+                  >
+                    {link.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => {
+                    scrollTo('contact');
+                    setIsOpen(false);
+                  }}
+                  className="bg-[#4a5d5e] text-[#f0f4f4] w-full py-3 mt-2"
+                >
+                  Contact
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       <main className="pt-16">
