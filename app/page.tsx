@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
-import { Github, Linkedin, Twitter, Globe } from 'lucide-react';
+import { Github, Linkedin, Twitter, Star } from 'lucide-react';
 import { Hexagon, Zap, Orbit, Users, ArrowUpRight, Shield, Sun, Moon, Ghost, Send, CheckCircle2 } from "lucide-react";
 import KalaSnake from "@/components/kalaSnake";
 import { team } from "@/components/team";
@@ -41,33 +41,33 @@ export default function BrumbunMancapat() {
   ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setFormStatus("sending");
+    e.preventDefault();
+    setFormStatus("sending");
 
-  const formData = new FormData(e.currentTarget);
-  const payload = {
-    name: formData.get("Identity_Name"),
-    email: formData.get("Email_Address"),
-    message: formData.get("Your_Message"),
-  };
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: formData.get("Identity_Name"),
+      email: formData.get("Email_Address"),
+      message: formData.get("Your_Message"),
+    };
 
-  try {
-    const response = await fetch('/api/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-    if (response.ok) {
-      setFormStatus("sent");
-    } else {
-      throw new Error("Failed to send transmission");
+      if (response.ok) {
+        setFormStatus("sent");
+      } else {
+        throw new Error("Failed to send transmission");
+      }
+    } catch (error) {
+      console.error(error);
+      setFormStatus("idle");
+      alert("Transmission failed. Check console for details.");
     }
-  } catch (error) {
-    console.error(error);
-    setFormStatus("idle");
-    alert("Transmission failed. Check console for details.");
-  }
   };
 
   const scrollTo = (id: string) => {
@@ -345,7 +345,7 @@ export default function BrumbunMancapat() {
 
         {/* 3. WEST (YELLOW): VISION */}
         <section id="about" className="py-32 px-6 bg-[#FFD333] border-b-2 border-[#1a1a1a]">
-          <div className="max-w-4xl mx-auto text-center md:text-left">
+          <div className="max-w-7xl mx-auto text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-4 mb-10">
                <Sun size={40} className="text-[#1a1a1a]" />
                <span className="text-xs font-bold uppercase tracking-[0.4em]">The Brumbun Philosophy</span>
@@ -446,57 +446,116 @@ export default function BrumbunMancapat() {
         </section>
 
         {/* 5. EAST (WHITE): CONTACT */}
-        <section id="contact" className="py-32 px-6 bg-[#E7EBEE] border-b-2 border-[#1a1a1a]">
-          <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-16">
-              <Ghost className="mx-auto mb-6 text-[#E7EBEE]" size={48} />
-              <h2 className="text-5xl font-black uppercase mb-4">Let's Connect</h2>
-              <p className="text-xs font-bold uppercase opacity-60">Send a transmission to the studio</p>
+        <section id="contact" className="py-32 px-6 bg-[#f5f5f5] border-y-8 border-[#1a1a1a] relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+          <div className="absolute top-10 left-10 rotate-12"><Star size={120} fill="white" /></div>
+          <div className="absolute bottom-10 right-10 -rotate-12"><Star size={160} fill="white" /></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="text-center mb-16 -rotate-2">
+            <div className="inline-block bg-[#1a1a1a] p-4 mb-6 skew-x-[-10deg]">
+              <Ghost className="text-white animate-pulse" size={64} />
             </div>
             
-            <AnimatePresence mode="wait">
-              {formStatus === 'sent' ? (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0, 1, 1] }} // Simple flicker effect
-                  transition={{ duration: 0.3, times: [0, 0.2, 0.4, 0.6, 1] }}
-                  className="bg-[#1a1a1a] text-white p-12 text-center border-4 border-[#1a1a1a]"
-                >
-                  <CheckCircle2 size={48} className="mx-auto mb-4 text-[#FFD333]" />
-                  <h3 className="text-3xl font-black uppercase mb-2">Message Logged</h3>
-                  <p className="text-sm uppercase font-bold">We will reach out shortly.</p>
-                  <button onClick={() => setFormStatus('idle')} className="mt-8 underline text-xs uppercase font-black">Send another?</button>
-                </motion.div>
-              ) : (
-                <motion.form 
-                  onSubmit={handleSubmit}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.1 }} // Fast exit
-                  className="space-y-6"
-                >
-                  <div className="group">
-                    <label className="block text-[10px] font-black uppercase mb-2 ml-1">Identity_Name</label>
-                    <input required type="text" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#FFD333] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
-                  </div>
-                  <div className="group">
-                    <label className="block text-[10px] font-black uppercase mb-2 ml-1">Email_Address</label>
-                    <input required type="email" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#FFD333] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
-                  </div>
-                  <div className="group">
-                    <label className="block text-[10px] font-black uppercase mb-2 ml-1">Your_Message</label>
-                    <textarea required rows={4} className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#FFD333] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
-                  </div>
-                  <button 
-                    disabled={formStatus === 'sending'}
-                    className="w-full bg-[#1a1a1a] text-white py-5 font-black uppercase text-sm flex items-center justify-center gap-4 hover:bg-[#C81927] disabled:opacity-50 active:translate-y-1 active:translate-x-1 transition-none shadow-[6px_6px_0px_0px_#E7EBEE]"
-                  >
-                    {formStatus === 'sending' ? 'Sending...' : <><Send size={18} /> Push Transmission</>}
-                  </button>
-                </motion.form>
-              )}
-            </AnimatePresence>
+            <h2 className="text-7xl font-black uppercase mb-4 text-[#C81927] drop-shadow-[6px_6px_0px_#1a1a1a] tracking-tighter italic">
+              Take Your <span className="bg-[#C81927] text-[#1a1a1a] px-2 not-italic">Heart</span>
+            </h2>
+            <p className="text-sm font-black uppercase text-white bg-[#1a1a1a] inline-block px-4 py-1 skew-x-[15deg]">
+              Transmission Channel: Open
+            </p>
           </div>
-        </section>
+          
+          <AnimatePresence mode="wait">
+            {formStatus === 'sent' ? (
+              <motion.div 
+                initial={{ scale: 0.8, rotate: -10, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                className="bg-white text-[#1a1a1a] p-12 text-center border-8 border-[#1a1a1a] shadow-[20px_20px_0px_0px_#1a1a1a] relative"
+              >
+                <CheckCircle2 size={80} className="mx-auto mb-4 text-[#C81927]" />
+                <h3 className="text-5xl font-black uppercase mb-2 italic">Target Captured</h3>
+                <p className="text-lg uppercase font-bold">Your message has been logged in the metaverse.</p>
+                <button 
+                  onClick={() => setFormStatus('idle')} 
+                  className="mt-8 bg-[#1a1a1a] text-white px-8 py-3 font-black hover:bg-[#FFD333] hover:text-[#1a1a1a] transition-colors uppercase skew-x-[-10deg]"
+                >
+                  Send Another?
+                </button>
+              </motion.div>
+            ) : (
+              <motion.form 
+                onSubmit={handleSubmit}
+                exit={{ x: '-100vw', rotate: -20 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                className="space-y-8"
+              >
+                {/* Name Field */}
+                <div className="relative rotate-[-1deg]">
+                  <label className="absolute -top-4 left-4 bg-[#FFD333] text-[#1a1a1a] text-xs font-black uppercase px-2 py-1 z-20 skew-x-[-10deg] border-2 border-[#1a1a1a]">
+                    Identity_Name
+                  </label>
+                  <input 
+                    required 
+                    type="text" 
+                    name="Identity_Name"                    
+                    placeholder="WHO ARE YOU?"
+                    className="w-full bg-white border-4 border-[#1a1a1a] p-6 outline-none focus:ring-4 focus:ring-[#FFD333] font-black text-xl uppercase placeholder:opacity-30 shadow-[10px_10px_0px_0px_#1a1a1a]" 
+                  />
+                </div>
+
+                {/* Email Field */}
+                <div className="relative rotate-[1.5deg]">
+                  <label className="absolute -top-4 left-4 bg-white text-[#1a1a1a] text-xs font-black uppercase px-2 py-1 z-20 skew-x-[5deg] border-2 border-[#1a1a1a]">
+                    Contact_Coordinates
+                  </label>
+                  <input 
+                    required 
+                    type="email" 
+                    name="Email_Address"
+                    placeholder="EMAIL@METAVERSE.COM"
+                    className="w-full bg-[#1a1a1a] border-4 border-white p-6 outline-none focus:bg-[#C81927] text-white font-black text-xl uppercase placeholder:opacity-30 shadow-[10px_10px_0px_0px_#fff]" 
+                  />
+                </div>
+
+                {/* Message Field */}
+                
+                <div className="relative rotate-[-0.5deg]">
+                  <label className="absolute -top-4 left-4 bg-[#1a1a1a] text-white text-xs font-black uppercase px-2 py-1 z-20 border-2 border-white">
+                    Manifesto_Content
+                  </label>
+                  <textarea 
+                    required 
+                    rows={4} 
+                    placeholder="STATE YOUR INTENTIONS..."
+                    name="Your_Message"                    
+                    className="w-full bg-white border-4 border-[#1a1a1a] p-6 outline-none focus:ring-4 focus:ring-[#FFD333] font-black text-xl uppercase placeholder:opacity-30 shadow-[10px_10px_0px_0px_#1a1a1a]" 
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <button 
+                  disabled={formStatus === 'sending'}
+                  className="group relative w-full bg-[#1a1a1a] text-white py-8 font-black uppercase text-2xl overflow-hidden shadow-[12px_12px_0px_0px_#FFD333] active:translate-y-2 active:shadow-none transition-all"
+                >
+                  <div className="absolute inset-0 bg-[#C81927] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-200" />
+                  <span className="relative z-10 flex items-center justify-center gap-4 group-hover:text-[#1a1a1a]">
+                    {formStatus === 'sending' ? (
+                      'Executing...'
+                    ) : (
+                      <>
+                        <Send size={28} strokeWidth={3} /> 
+                        Initiate Mission
+                      </>
+                    )}
+                  </span>
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
       </main>
 
       <footer className="py-20 bg-[#121212] text-center text-white border-t-2 border-[#1a1a1a]">
