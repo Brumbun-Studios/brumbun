@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image';
+import { Github, Linkedin, Twitter, Globe } from 'lucide-react';
 import { Hexagon, Zap, Orbit, Users, ArrowUpRight, Shield, Sun, Moon, Ghost, Send, CheckCircle2 } from "lucide-react";
+import KalaSnake from "@/components/kalaSnake";
+import { team } from "@/components/team";
 
 // --- REFINED COLOR PALETTE (BRIGHTER BUT RETRO) ---
 const PHILOSOPHY = {
@@ -11,6 +15,19 @@ const PHILOSOPHY = {
   east: "#F8F9FA",  // Brighter blue
   west: "#ffef00",  // Golden Yellow
   paper: "#f5f5f5",  // Lighter, cleaner aged paper
+};
+
+const stepEase = (steps: number) => (v: number) => Math.floor(v * steps) / steps;
+
+const RETRO_TRANSITION = {
+  type: "tween",
+  ease: stepEase(4), // This creates a "frame-by-frame" movement feel
+  duration: 0.3
+} as const;
+
+const INSTANT_TRANSITION = {
+  type: "tween",
+  duration: 0 // For immediate "clicky" feedback
 };
 
 export default function BrumbunMancapat() {
@@ -27,6 +44,12 @@ export default function BrumbunMancapat() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const SocialBadge = ({ icon }: { icon: React.ReactNode }) => (
+    <button className="p-2 bg-slate-800 ...">
+      {icon}
+    </button>
+  );
+
   return (
     <div className="min-h-screen bg-[#f5f5f5] text-[#1a1a1a] selection:bg-[#ffef00] selection:text-black overflow-x-hidden">
       {/* --- FONT & CRT OVERLAYS --- */}
@@ -36,10 +59,21 @@ export default function BrumbunMancapat() {
         h1, h2, h3, .retro-header { font-family: 'VT323', monospace; }
         body, p, button, input, textarea { font-family: 'Space Mono', monospace; }
         
+        @keyframes flicker {
+          0% { opacity: 0.18; }
+          5% { opacity: 0.22; }
+          10% { opacity: 0.19; }
+          15% { opacity: 0.25; }
+          25% { opacity: 0.18; }
+          30% { opacity: 0.22; }
+          100% { opacity: 0.19; }
+        }
+          
         .crt-line {
           background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
                       linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
           background-size: 100% 4px, 3px 100%;
+          animation: flicker 0.15s infinite;
         }
       `}</style>
 
@@ -59,7 +93,7 @@ export default function BrumbunMancapat() {
             <button onClick={() => scrollTo('game')} className="hover:text-[#e63946] transition-colors">Current_Project</button>
             <button onClick={() => scrollTo('about')} className="hover:text-[#ffef00] transition-colors">Philosophy</button>
             <button onClick={() => scrollTo('members')} className="hover:text-[#e63946] transition-colors">Team</button>
-            <button onClick={() => scrollTo('contact')} className="bg-[#1a1a1a] text-white px-3 py-1 hover:bg-[#ffef00] transition-all">Contact</button>
+            <button onClick={() => scrollTo('contact')} className="bg-[#1a1a1a] text-white px-3 py-1 hover:bg-[#ffef00] active:translate-y-1 active:translate-x-1 transition-none">Contact</button>
           </div>
         </div>
       </nav>
@@ -77,18 +111,20 @@ export default function BrumbunMancapat() {
 
           <div className="relative z-10 text-center px-6">
             <motion.div 
-              initial={{ rotate: -10, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={RETRO_TRANSITION}
               className="grid grid-cols-3 grid-rows-3 gap-1 w-20 h-20 mx-auto mb-10"
             >
-               {[0,1,2,3,4,5,6,7,8].map(i => (
-                 <div key={i} className={`border-2 border-[#1a1a1a] ${i === 4 ? 'bg-[#F8F9FA]' : 'bg-white'}`} />
-               ))}
+              {[0,1,2,3,4,5,6,7,8].map(i => (
+                <div key={i} className={`border-2 border-[#1a1a1a] ${i === 4 ? 'bg-[#F8F9FA]' : 'bg-white'}`} />
+              ))}
             </motion.div>
 
             <motion.h1 
-              initial={{ y: 20, opacity: 0 }}
+              initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
+              transition={RETRO_TRANSITION}
               className="text-7xl md:text-9xl font-black uppercase leading-[0.85] mb-6"
             >
               Harmony in <br />
@@ -101,7 +137,7 @@ export default function BrumbunMancapat() {
 
             <button 
               onClick={() => scrollTo('game')}
-              className="border-4 border-[#1a1a1a] bg-[#ffef00] text-black px-12 py-5 font-bold uppercase text-sm shadow-[6px_6px_0px_0px_#1a1a1a] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+              className="border-4 border-[#1a1a1a] bg-[#ffef00] text-black px-12 py-5 font-bold uppercase text-sm shadow-[6px_6px_0px_0px_#1a1a1a] hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:translate-y-1 active:translate-x-1 transition-none"
             >
               Enter the Studio
             </button>
@@ -111,21 +147,33 @@ export default function BrumbunMancapat() {
         {/* 2. SOUTH (RED): CURRENT PROJECT */}
         <section id="game" className="py-32 px-6 bg-[#e63946] border-b-2 border-[#1a1a1a] text-white">
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+            
+            {/* LEFT COLUMN: THE GAME VIEWPORT */}
             <div className="border-4 border-[#1a1a1a] bg-[#1a1a1a] p-2 shadow-[12px_12px_0px_0px_#ffef00]">
-               <div className="aspect-video bg-[#121212] relative overflow-hidden flex items-center justify-center">
-                 <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(0deg,#e63946,#e63946_1px,transparent_1px,transparent_10px)]" />
-                 <Zap size={80} className="text-[#ffef00] animate-bounce" />
-                 <div className="absolute bottom-4 left-4 bg-[#e63946] px-3 py-1 text-[10px] font-bold">ALPHA_BUILD_V.04</div>
-               </div>
+              {/* Changed aspect-video to aspect-square to match the Snake Grid */}
+              <div className="aspect-square bg-[#121212] relative overflow-hidden flex items-center justify-center">
+                {/* CRT Scanline Overlay */}
+                <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(0deg,#e63946,#e63946_1px,transparent_1px,transparent_10px)] z-10 pointer-events-none" />
+                
+                {/* The Snake Game */}
+                <KalaSnake />
+
+                {/* Debug Label - Now positioned relative to the square viewport */}
+                <div className="absolute bottom-4 left-4 bg-[#e63946] px-3 py-1 text-[10px] font-bold z-30 border-2 border-[#1a1a1a]">
+                  ALPHA_BUILD_V.04
+                </div>
+              </div>
             </div>
+
+            {/* RIGHT COLUMN: NARRATIVE */}
             <div>
               <h2 className="text-xl font-bold uppercase tracking-[0.3em] mb-4 text-[#ffef00]">Direction: South / Brahma</h2>
               <h3 className="text-6xl font-black uppercase mb-8 leading-tight">Project <br />Kala_Tactics</h3>
               <p className="font-medium text-lg leading-relaxed mb-10 opacity-90">
                 A turn-based RPG set in an alternate Java. You don't just fight; you negotiate with spirits, balance your inner elements, and reshape the landscape through ancient rituals.
               </p>
-              <button className="bg-[#1a1a1a] text-white px-8 py-4 font-bold uppercase text-xs flex items-center gap-3 hover:bg-white hover:text-[#e63946] transition-all">
-                Download Press Kit <ArrowUpRight size={16} />
+              <button className="bg-[#1a1a1a] text-white px-8 py-4 font-bold uppercase text-xs flex items-center gap-3 hover:bg-[#ffef00] hover:text-black transition-none border-2 border-[#1a1a1a] active:translate-y-1">
+                Explore Mechanics <ArrowUpRight size={16} />
               </button>
             </div>
           </div>
@@ -156,19 +204,54 @@ export default function BrumbunMancapat() {
                <p className="text-[10px] font-mono opacity-50 max-w-xs text-right uppercase">Four corners working in unison to maintain the center.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { name: 'Wira', role: 'Engineering Lead' },
-                { name: 'Sita', role: 'Art Director' },
-                { name: 'Bagus', role: 'Game Design' },
-                { name: 'Rani', role: 'Cultural Lead' }
-              ].map((member, i) => (
-                <div key={i} className="group border-2 border-white/10 p-8 hover:border-[#ffef00] transition-all relative overflow-hidden">
-                   <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity">
-                     <Orbit size={16} />
-                   </div>
-                   <div className="w-16 h-16 bg-[#333] mb-8 border border-white/20 group-hover:bg-[#e63946] transition-colors" />
-                   <h4 className="font-black uppercase text-2xl mb-2">{member.name}</h4>
-                   <p className="text-[10px] font-bold uppercase text-[#ffef00]">{member.role}</p>
+              {team.map((member, i) => (
+                <div 
+                  key={i} 
+                  className="flex flex-col bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-slate-500 active:translate-y-1 active:translate-x-1 transition-none duration-300 shadow-xl"
+                >
+                  <div className="w-full aspect-[4/5] relative group overflow-hidden bg-slate-800">
+                    {/* The Actual Image */}
+                    <Image
+                      src={member.imageurl} 
+                      alt={member.name}
+                      fill 
+                      className="object-cover transition-transform duration-200 ease-[steps(2,end)] group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+
+                    {/* 2. Cool Tone Gradient Overlay */}
+                    {/* This makes the bottom of the image darker so the name is easier to read */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent z-10" />
+                    
+                    {/* 3. Subtle Cool Tone Border (inner) */}
+                    <div className="absolute inset-0 border border-white/5 z-20 pointer-events-none" />
+                  </div>
+
+                  {/* 2. Content Area */}
+                  <div className="p-6 flex flex-col flex-grow text-left">
+                    {/* Name - Big & Bold */}
+                    <h4 className="text-3xl font-bold text-slate-100 tracking-tight mb-1">
+                      {member.name}
+                    </h4>
+                    
+                    {/* Position */}
+                    <p className="text-sm font-semibold uppercase tracking-wider text-cyan-400 mb-4">
+                      {member.role}
+                    </p>
+
+                    {/* Description */}
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      {member.desc}
+                    </p>
+
+                    {/* 3. Social Media Badges */}
+                    <div className="mt-auto flex gap-3">
+                      {member.socials.includes('github') && <SocialBadge icon={<Github size={14}/>} />}
+                      {member.socials.includes('linkedin') && <SocialBadge icon={<Linkedin size={14}/>} />}
+                      {member.socials.includes('twitter') && <SocialBadge icon={<Twitter size={14}/>} />}
+                      {member.socials.includes('globe') && <SocialBadge icon={<Globe size={14}/>} />}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -187,11 +270,12 @@ export default function BrumbunMancapat() {
             <AnimatePresence mode="wait">
               {formStatus === 'sent' ? (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-[#F8F9FA] text-white p-12 text-center border-4 border-[#1a1a1a]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0, 1, 1] }} // Simple flicker effect
+                  transition={{ duration: 0.3, times: [0, 0.2, 0.4, 0.6, 1] }}
+                  className="bg-[#1a1a1a] text-white p-12 text-center border-4 border-[#1a1a1a]"
                 >
-                  <CheckCircle2 size={48} className="mx-auto mb-4" />
+                  <CheckCircle2 size={48} className="mx-auto mb-4 text-[#ffef00]" />
                   <h3 className="text-3xl font-black uppercase mb-2">Message Logged</h3>
                   <p className="text-sm uppercase font-bold">We will reach out shortly.</p>
                   <button onClick={() => setFormStatus('idle')} className="mt-8 underline text-xs uppercase font-black">Send another?</button>
@@ -199,24 +283,25 @@ export default function BrumbunMancapat() {
               ) : (
                 <motion.form 
                   onSubmit={handleSubmit}
-                  exit={{ opacity: 0, y: -20 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.1 }} // Fast exit
                   className="space-y-6"
                 >
                   <div className="group">
                     <label className="block text-[10px] font-black uppercase mb-2 ml-1">Identity_Name</label>
-                    <input required type="text" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] transition-all font-bold" />
+                    <input required type="text" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
                   </div>
                   <div className="group">
                     <label className="block text-[10px] font-black uppercase mb-2 ml-1">Email_Address</label>
-                    <input required type="email" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] transition-all font-bold" />
+                    <input required type="email" className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
                   </div>
                   <div className="group">
                     <label className="block text-[10px] font-black uppercase mb-2 ml-1">Your_Message</label>
-                    <textarea required rows={4} className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] transition-all font-bold" />
+                    <textarea required rows={4} className="w-full bg-white border-2 border-[#1a1a1a] p-4 outline-none focus:bg-[#ffef00] active:translate-y-1 active:translate-x-1 transition-none font-bold" />
                   </div>
                   <button 
                     disabled={formStatus === 'sending'}
-                    className="w-full bg-[#1a1a1a] text-white py-5 font-black uppercase text-sm flex items-center justify-center gap-4 hover:bg-[#e63946] disabled:opacity-50 transition-all shadow-[6px_6px_0px_0px_#F8F9FA]"
+                    className="w-full bg-[#1a1a1a] text-white py-5 font-black uppercase text-sm flex items-center justify-center gap-4 hover:bg-[#e63946] disabled:opacity-50 active:translate-y-1 active:translate-x-1 transition-none shadow-[6px_6px_0px_0px_#F8F9FA]"
                   >
                     {formStatus === 'sending' ? 'Sending...' : <><Send size={18} /> Push Transmission</>}
                   </button>
