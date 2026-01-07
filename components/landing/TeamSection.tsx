@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Github, Linkedin } from 'lucide-react';
+import { Github, Linkedin, Twitter, Instagram, Dribbble } from 'lucide-react';
 import { team } from "@/components/team";
 
 export default function TeamSection() {
@@ -25,8 +25,21 @@ export default function TeamSection() {
                 <p className="text-sm font-bold uppercase text-[#306230] mb-3">&gt; {member.role}</p>
                 <p className="text-md text-[#1a1a1a] line-clamp-3 mb-6">{member.desc}</p>
                 <div className="flex gap-3">
-                  {member.socials.github && <SocialButton icon={<Github size={16}/>} label="B" href={member.socials.github} />}
-                  {member.socials.linkedin && <SocialButton icon={<Linkedin size={16}/>} label="A" href={member.socials.linkedin} />}
+                  {member.socials.github && (
+                    <SocialButton icon={<Github size={16}/>} label="GitHub" href={member.socials.github} />
+                  )}
+                  {member.socials.linkedin && (
+                    <SocialButton icon={<Linkedin size={16}/>} label="LinkedIn" href={member.socials.linkedin} />
+                  )}
+                  {member.socials.twitter && (
+                    <SocialButton icon={<Twitter size={16}/>} label="Twitter" href={member.socials.twitter} />
+                  )}
+                  {member.socials.instagram && (
+                    <SocialButton icon={<Instagram size={16}/>} label="Instagram" href={member.socials.instagram} />
+                  )}
+                  {member.socials.dribbble && (
+                    <SocialButton icon={<Dribbble size={16}/>} label="Dribbble" href={member.socials.dribbble} />
+                  )}
                 </div>
               </div>
             </div>

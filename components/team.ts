@@ -1,21 +1,25 @@
+import { Instagram, Twitter } from "lucide-react";
+
 export const team = [
     { 
       name: 'Gusti', 
       role: 'Technical Director', 
-      desc: 'I love Persona.',
+      desc: 'I have a passion for crafting memorable digital experiences.',
       socials: {
-        github: 'https://github.com/yourusername',
-        linkedin: 'https://linkedin.com/in/yourusername'
+        github: 'https://github.com/goosetea04',
+        linkedin: 'https://linkedin.com/in/gustirais',
+        dribbble: 'https://dribbble.com/goosetea',
       },
       imageurl: '/Pixel_art_Wizard_Portrait.png'
     },
     { 
       name: 'Evantgard', 
-      role: 'Story Director', 
-      desc: 'Blending traditional Javanese aesthetics with modern digital landscapes.',
+      role: 'Story Director & Project Manager', 
+      desc: 'Character-driven in both craft and life',
       socials: {
-        github: 'https://github.com/yourusername',
-        linkedin: 'https://linkedin.com/in/yourusername'
+        instagram: 'https://www.instagram.com/evantgard/',
+        linkedin: 'https://linkedin.com/in/evantgard',
+        twitter: 'https://x.com/in/evantgard',
       },
       imageurl: '/Pixel_art_Wizard_Portrait.png'
     },
@@ -30,12 +34,12 @@ export const team = [
       imageurl: '/Pixel_art_Wizard_Portrait.png'
     },
     { 
-      name: 'Keenan', 
-      role: 'Art Director', 
-      desc: 'Ensuring historical accuracy and folklore integrity across all media.',
+      name: 'Keenan Jeremy', 
+      role: 'Art Director & Project Manager', 
+      desc: 'EVERY SECOND IS A POTENTIAL CONTENT ',
       socials: {
-        github: 'https://github.com/yourusername',
-        linkedin: 'https://linkedin.com/in/yourusername'
+        instagram: 'https://www.instagram.com/keenan__jeremy/',
+        linkedin: 'https://linkedin.com/in/keenanjeremy'
       },
       imageurl: '/Pixel_art_Wizard_Portrait.png'
     },
@@ -60,11 +64,11 @@ export const team = [
       imageurl: '/Pixel_art_Wizard_Portrait.png'
     },
     { 
-      name: 'Bagus', 
-      role: 'Game Design', 
+      name: 'Nadine', 
+      role: 'Art Co-Lead', 
       desc: 'Crafting complex combat systems and immersive narrative arcs.',
       socials: {
-        github: 'https://github.com/yourusername',
+        instagram: 'https://www.instagram.com/nadinetrying/',
         linkedin: 'https://linkedin.com/in/yourusername'
       },
       imageurl: '/Pixel_art_Wizard_Portrait.png'
